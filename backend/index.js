@@ -1,22 +1,19 @@
-// // server.js
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const Razorpay = require("razorpay");
 const cors = require("cors");
+const dotenv = require("dotenv");
+dotenv.config();
 
 const app = express();
 const port = 5000;
 
-// Connect to MongoDB
-mongoose.connect(
-  "mongodb+srv://rahulkr:rahulkr@cluster0.uu1odbb.mongodb.net/placeorder_razorpay"
-);
+mongoose.connect(process.env.MONGODB_URL);
 
 const db = mongoose.connection;
 db.once("open", () => console.log("Connected to database"));
 
-// Define MongoDB schema and model
 const OrderSchema = new mongoose.Schema({
   orderId: String,
   amount: Number,
@@ -24,10 +21,9 @@ const OrderSchema = new mongoose.Schema({
 });
 const Order = mongoose.model("Order", OrderSchema);
 
-// Razorpay instance
 const razorpay = new Razorpay({
-  key_id: "rzp_test_drjHwcTz7rLPPq",
-  key_secret: "gJrKh7SahfQdwYfg8uQIcFvV",
+  key_id: `${process.env.RAZORPAY_KEY_ID}`,
+  key_secret: `${process.env.RAZORPAY_SECRET_KEY}`,
 });
 
 // Middleware

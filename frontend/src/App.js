@@ -4,13 +4,15 @@ import axios from "axios";
 
 function App() {
   const [orderId, setOrderId] = useState("");
-  const [amount, setAmount] = useState(0);
-
+  const [amount, setAmount] = useState("");
   const createOrder = async () => {
     try {
-      const response = await axios.post("http://localhost:5000/api/orders", {
-        amount,
-      });
+      const response = await axios.post(
+        `${process.env.REACT_APP_URL}/api/orders`,
+        {
+          amount,
+        }
+      );
       const { orderId } = response.data;
       setOrderId(orderId);
     } catch (error) {
@@ -20,7 +22,7 @@ function App() {
 
   const handlePaymentSuccess = async (paymentId) => {
     try {
-      await axios.post("http://localhost:5000/api/payment/success", {
+      await axios.post(`${process.env.REACT_APP_URL}/api/payment/success`, {
         order_id: orderId,
         payment_id: paymentId,
       });
@@ -46,7 +48,7 @@ function App() {
             <button
               onClick={() => {
                 const options = {
-                  key: "rzp_test_drjHwcTz7rLPPq",
+                  key: `${process.env.REACT_APP_KEY}`,
                   amount: amount * 100,
                   currency: "INR",
                   name: "Your Company Name",
